@@ -1,6 +1,12 @@
-
+ntos-qrap-core/
+├── README.md           # Intro, vision, quickstart
+├── /src/               # Core source files
+│   ├── main_runtime/   # Self-hosted NT Runtime
+│   ├── qrap_layer/     # Quantum agent substrate integration
+│   ├── ipc_bus/        # Hardened inter-process communication
+│   └── guardian_boot/  # Secure transition from boot to runtime
+├── /docs/              # Architecture docs, design specs
+├── /scripts/           # Setup, build automation
+└── /examples/          # Example QRAP-enabled code and demos⁰
 # Haikus for Codespaces
 
-This is a quick node project template for demoing Codespaces. It is based on the [Azure node sample](https://github.com/Azure-Samples/nodejs-docs-hello-world). It's great!!!
-
-Point your browser to [Quickstart for GitHub Codespaces](https://docs.github.com/en/codespaces/getting-started/quickstart) for a tour of using Codespaces with this repo.
