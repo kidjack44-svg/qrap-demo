@@ -1,0 +1,13 @@
+[workspace]
+resolver = "2"
+members = [
+    "core",
+    "python",
+    "wasm-visualizer",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/kidjack44-svg/qrap-demo"
