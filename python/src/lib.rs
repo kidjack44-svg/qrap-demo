@@ -197,9 +197,9 @@ impl PyAttestationBuilder {
         slf
     }
 
-    fn build(&self) -> PyResult<PyAttestation> {
-        // Clone the inner builder to avoid moving it
-        let builder = AttestationBuilder::new();
+    fn build(&mut self) -> PyResult<PyAttestation> {
+        // Take the inner builder and replace with a new one
+        let builder = std::mem::take(&mut self.inner);
         let attestation = builder
             .build()
             .map_err(|e| PyErr::new::<pyo3::exceptions::PyValueError, _>(e.to_string()))?;

@@ -1,6 +1,7 @@
 # Logs
 logs
 *.log
+!baseline/*.log
 npm-debug.log*
 
 # Runtime data
