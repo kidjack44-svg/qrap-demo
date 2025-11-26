@@ -1,0 +1,15 @@
+[package]
+name = "qrap-python"
+version = "0.1.0"
+edition = "2021"
+authors = ["QRAP Team"]
+description = "Python bindings for QRAP Core"
+license = "MIT"
+
+[lib]
+name = "qrap_python"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.20", features = ["extension-module"] }
+qrap-core = { path = "../core" }
