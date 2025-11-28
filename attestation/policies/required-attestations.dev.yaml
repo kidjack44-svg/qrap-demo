@@ -1,0 +1,75 @@
+# Required attestations for development environment
+# This policy defines what attestations are recommended for development builds
+
+environment: dev
+
+# Repository information
+repository:
+  owner: kidjack44-svg
+  name: qrap-demo
+  url: https://github.com/kidjack44-svg/qrap-demo
+
+# Required attestations - recommended for development but not strictly enforced
+required:
+  - type: provenance
+    description: Build provenance attestation
+    schema: ../schema/provenance.schema.v1.json
+    requirements:
+      - must_have_signature: false  # Not required for dev
+      - source_repo_must_match: https://github.com/kidjack44-svg/qrap-demo
+      - builder_must_be_trusted: false  # Local builds allowed
+
+# Optional attestations
+optional:
+  - type: sbom
+    description: Software Bill of Materials
+    schema: ../schema/sbom.schema.v1.json
+
+  - type: verification-result
+    description: Verification results from CI
+    schema: ../schema/verification-result.schema.v1.json
+
+  - type: vulnerability-scan
+    description: Security vulnerability scan results
+
+# Artifact types and their specific requirements (relaxed for dev)
+artifacts:
+  container-image:
+    required:
+      - provenance
+    optional:
+      - sbom
+      - vulnerability-scan
+
+  wasm-module:
+    required: []
+    optional:
+      - provenance
+
+  python-wheel:
+    required: []
+    optional:
+      - provenance
+      - sbom
+
+  binary:
+    required: []
+    optional:
+      - provenance
+
+# Trusted builders (includes local for dev)
+trusted_builders:
+  - id: https://github.com/actions/runner
+    name: GitHub Actions
+  - id: local
+    name: Local Development Build
+
+# Policy metadata
+metadata:
+  version: "1.0.0"
+  last_updated: "2024-01-01"
+  maintainer: kidjack44-svg
+  notes: |
+    Development policy is relaxed compared to production.
+    Signatures are not required, and local builds are allowed.
+    This enables faster iteration during development.

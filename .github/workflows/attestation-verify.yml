@@ -1,0 +1,74 @@
+# Verify attestations for qrap-demo builds
+# This workflow verifies provenance and SBOM attestations.
+# It is a scaffold implementation and does not contain secrets.
+
+name: Verify Attestations
+
+on:
+  workflow_dispatch:
+    inputs:
+      attestation_source:
+        description: 'Source of attestations to verify'
+        required: false
+        default: 'examples'
+        type: choice
+        options:
+          - examples
+          - artifact
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: |
+          if ! command -v jq &> /dev/null; then
+            sudo apt-get update && sudo apt-get install -y jq
+          fi
+
+      - name: Make scripts executable
+        run: |
+          chmod +x attestation/scripts/verify-provenance.sh
+          chmod +x attestation/scripts/verify-sbom.sh
+
+      - name: Download attestations (if from artifact)
+        if: inputs.attestation_source == 'artifact'
+        uses: actions/download-artifact@v4
+        with:
+          name: attestations
+          path: attestation/output/
+        continue-on-error: true
+
+      - name: Set attestation paths
+        id: paths
+        run: |
+          if [ "${{ inputs.attestation_source }}" = "artifact" ]; then
+            echo "provenance=attestation/output/provenance.json" >> "$GITHUB_OUTPUT"
+            echo "sbom=attestation/output/sbom.json" >> "$GITHUB_OUTPUT"
+          else
+            echo "provenance=attestation/examples/provenance.release-build.v1.json" >> "$GITHUB_OUTPUT"
+            echo "sbom=attestation/examples/sbom.web-client.v1.json" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Verify provenance for qrap-demo
+        run: bash attestation/scripts/verify-provenance.sh "${{ steps.paths.outputs.provenance }}"
+        env:
+          EXPECTED_REPO: "https://github.com/${{ github.repository }}"
+
+      - name: Verify SBOM for qrap-demo
+        run: bash attestation/scripts/verify-sbom.sh "${{ steps.paths.outputs.sbom }}"
+
+      - name: Verification summary
+        run: |
+          echo "## Attestation Verification Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- ✅ Provenance verification completed" >> "$GITHUB_STEP_SUMMARY"
+          echo "- ✅ SBOM verification completed" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Note: This is a scaffold implementation." >> "$GITHUB_STEP_SUMMARY"

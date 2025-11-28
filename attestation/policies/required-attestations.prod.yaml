@@ -1,0 +1,76 @@
+# Required attestations for production environment
+# This policy defines what attestations must be present for production releases
+
+environment: prod
+
+# Repository information
+repository:
+  owner: kidjack44-svg
+  name: qrap-demo
+  url: https://github.com/kidjack44-svg/qrap-demo
+
+# Required attestations - must be present for all production releases
+required:
+  - type: provenance
+    description: Build provenance attestation
+    schema: ../schema/provenance.schema.v1.json
+    requirements:
+      - must_have_signature: true
+      - source_repo_must_match: https://github.com/kidjack44-svg/qrap-demo
+      - builder_must_be_trusted: true
+
+  - type: sbom
+    description: Software Bill of Materials
+    schema: ../schema/sbom.schema.v1.json
+    requirements:
+      - must_have_signature: true
+      - must_include_direct_dependencies: true
+
+# Optional attestations - recommended but not required
+optional:
+  - type: verification-result
+    description: Verification results from CI
+    schema: ../schema/verification-result.schema.v1.json
+
+  - type: vulnerability-scan
+    description: Security vulnerability scan results
+
+# Artifact types and their specific requirements
+artifacts:
+  container-image:
+    required:
+      - provenance
+      - sbom
+    optional:
+      - vulnerability-scan
+
+  wasm-module:
+    required:
+      - provenance
+    optional:
+      - sbom
+
+  python-wheel:
+    required:
+      - provenance
+      - sbom
+    optional: []
+
+  binary:
+    required:
+      - provenance
+    optional:
+      - sbom
+
+# Trusted builders
+trusted_builders:
+  - id: https://github.com/actions/runner
+    name: GitHub Actions
+  - id: https://github.com/slsa-framework/slsa-github-generator
+    name: SLSA GitHub Generator
+
+# Policy metadata
+metadata:
+  version: "1.0.0"
+  last_updated: "2024-01-01"
+  maintainer: kidjack44-svg

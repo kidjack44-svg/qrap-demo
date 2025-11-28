@@ -1,0 +1,32 @@
+{
+  "$schema": "../schema/provenance.schema.v1.json",
+  "subject": {
+    "name": "qrap-demo",
+    "type": "container-image",
+    "digest": {
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
+  "build": {
+    "source_repo": "https://github.com/kidjack44-svg/qrap-demo",
+    "commit": "0000000000000000000000000000000000000000",
+    "branch": "main",
+    "tag": "v1.0.0",
+    "workflow": "release-build",
+    "workflow_run_id": "0000000000",
+    "timestamp": "1970-01-01T00:00:00Z",
+    "builder": {
+      "id": "https://github.com/actions/runner",
+      "version": "2.x"
+    }
+  },
+  "metadata": {
+    "buildInvocationId": "example-build-invocation-id",
+    "completeness": {
+      "parameters": true,
+      "environment": true,
+      "materials": true
+    },
+    "reproducible": false
+  }
+}
