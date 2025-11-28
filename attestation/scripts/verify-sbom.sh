@@ -69,3 +69,4 @@ echo "  - grype (for vulnerability scanning against SBOM)"
 echo "  - sbom-scorecard"
 echo ""
 echo "Scaffold verification completed."
+

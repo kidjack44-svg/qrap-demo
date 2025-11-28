@@ -32,3 +32,4 @@
     name: provenance-attestation
     path: "${PROVENANCE_OUTPUT:-attestation/output/provenance.json}"
     if-no-files-found: warn
+

@@ -72,3 +72,4 @@ jobs:
           echo "- ✅ SBOM verification completed" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "Note: This is a scaffold implementation." >> "$GITHUB_STEP_SUMMARY"
+

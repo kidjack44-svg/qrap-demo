@@ -56,3 +56,4 @@ echo "In production, use tools like:"
 echo "  - cosign attest"
 echo "  - slsa-framework/slsa-github-generator"
 echo "  - gh attestation create"
+

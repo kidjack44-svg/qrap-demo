@@ -48,3 +48,4 @@ echo "  - syft"
 echo "  - trivy sbom"
 echo "  - cyclonedx-cli"
 echo "  - cargo-sbom"
+

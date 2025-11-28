@@ -74,3 +74,4 @@ echo "  - cosign verify-attestation"
 echo "  - gh attestation verify"
 echo ""
 echo "Scaffold verification completed."
+
