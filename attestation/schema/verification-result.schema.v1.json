@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/kidjack44-svg/qrap-demo/attestation/schema/verification-result.schema.v1.json",
+  "title": "QRAP Demo Verification Result",
+  "description": "Schema for attestation verification results for qrap-demo",
+  "type": "object",
+  "required": ["subject", "checks", "status"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Reference to this schema"
+    },
+    "subject": {
+      "type": "object",
+      "description": "The artifact that was verified",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the artifact"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of artifact"
+        },
+        "digest": {
+          "type": "object",
+          "description": "Cryptographic digest(s) of the artifact",
+          "properties": {
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        }
+      }
+    },
+    "verified_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when verification was performed"
+    },
+    "verifier": {
+      "type": "object",
+      "description": "Tool that performed verification",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the verifier tool"
+        },
+        "version": {
+          "type": "string",
+          "description": "Version of the verifier tool"
+        }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "description": "List of verification checks performed",
+      "items": {
+        "type": "object",
+        "required": ["name", "status"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the check"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of what was checked"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["passed", "failed", "skipped", "warning"],
+            "description": "Result of this check"
+          },
+          "message": {
+            "type": "string",
+            "description": "Additional details or error message"
+          }
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["passed", "failed", "partial"],
+      "description": "Overall verification status"
+    },
+    "policy": {
+      "type": "string",
+      "description": "Policy file used for verification"
+    },
+    "attestations_verified": {
+      "type": "array",
+      "description": "List of attestation types that were verified",
+      "items": {
+        "type": "string",
+        "enum": ["provenance", "sbom", "vulnerability-scan", "code-review"]
+      }
+    }
+  }
+}
+

@@ -1,0 +1,72 @@
+# Generate attestations for qrap-demo builds
+# This workflow generates provenance and SBOM attestations.
+# It is a scaffold implementation and does not contain secrets.
+
+name: Generate Attestations
+
+on:
+  workflow_dispatch:
+    inputs:
+      artifact_name:
+        description: 'Name of the artifact to generate attestations for'
+        required: false
+        default: 'qrap-demo'
+      artifact_type:
+        description: 'Type of artifact'
+        required: false
+        default: 'container-image'
+        type: choice
+        options:
+          - container-image
+          - wasm-module
+          - python-wheel
+          - binary
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: |
+          chmod +x attestation/scripts/generate-provenance.sh
+          chmod +x attestation/scripts/generate-sbom.sh
+
+      - name: Create output directory
+        run: mkdir -p attestation/output
+
+      - name: Generate provenance for qrap-demo
+        run: bash attestation/scripts/generate-provenance.sh attestation/output/provenance.json
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_WORKFLOW: ${{ github.workflow }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+
+      - name: Generate SBOM for qrap-demo
+        run: bash attestation/scripts/generate-sbom.sh attestation/output/sbom.json
+        env:
+          SUBJECT_NAME: ${{ inputs.artifact_name || 'qrap-demo' }}
+          SUBJECT_VERSION: '0.1.0'
+
+      - name: Display generated attestations
+        run: |
+          echo "=== Provenance Attestation ==="
+          cat attestation/output/provenance.json
+          echo ""
+          echo "=== SBOM Attestation ==="
+          cat attestation/output/sbom.json
+
+      - name: Upload attestations
+        uses: actions/upload-artifact@v4
+        with:
+          name: attestations
+          path: attestation/output/
+          if-no-files-found: error
+

@@ -1,0 +1,48 @@
+{
+  "$schema": "../schema/verification-result.schema.v1.json",
+  "subject": {
+    "name": "qrap-demo",
+    "type": "container-image",
+    "digest": {
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
+  "verified_at": "1970-01-01T00:00:00Z",
+  "verifier": {
+    "name": "example-verifier",
+    "version": "0.0.0"
+  },
+  "checks": [
+    {
+      "name": "provenance-exists",
+      "description": "Verify that a provenance attestation exists for the artifact",
+      "status": "passed",
+      "message": "Provenance attestation found and signature verified"
+    },
+    {
+      "name": "sbom-exists",
+      "description": "Verify that an SBOM attestation exists for the artifact",
+      "status": "passed",
+      "message": "SBOM attestation found and signature verified"
+    },
+    {
+      "name": "source-repo-match",
+      "description": "Verify that the provenance source repo matches expected value",
+      "status": "passed",
+      "message": "Source repo matches: https://github.com/kidjack44-svg/qrap-demo"
+    },
+    {
+      "name": "no-critical-vulnerabilities",
+      "description": "Verify that no critical vulnerabilities are present",
+      "status": "skipped",
+      "message": "Vulnerability scanning not configured"
+    }
+  ],
+  "status": "passed",
+  "policy": "attestation/policies/required-attestations.prod.yaml",
+  "attestations_verified": [
+    "provenance",
+    "sbom"
+  ]
+}
+

@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/kidjack44-svg/qrap-demo/attestation/schema/sbom.schema.v1.json",
+  "title": "QRAP Demo SBOM Attestation",
+  "description": "Schema for Software Bill of Materials (SBOM) attestations for qrap-demo",
+  "type": "object",
+  "required": ["subject", "packages"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Reference to this schema"
+    },
+    "subject": {
+      "type": "object",
+      "description": "The artifact this SBOM describes",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the artifact"
+        },
+        "version": {
+          "type": "string",
+          "description": "Version of the artifact"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["container-image", "wasm-module", "python-wheel", "binary", "source-archive", "application"],
+          "description": "Type of artifact"
+        }
+      }
+    },
+    "sbom_version": {
+      "type": "string",
+      "description": "Version of this SBOM format"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when SBOM was generated"
+    },
+    "generator": {
+      "type": "object",
+      "description": "Tool that generated this SBOM",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the generator tool (e.g., syft, trivy)"
+        },
+        "version": {
+          "type": "string",
+          "description": "Version of the generator tool"
+        }
+      }
+    },
+    "packages": {
+      "type": "array",
+      "description": "List of packages/dependencies",
+      "items": {
+        "type": "object",
+        "required": ["name", "version"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Package name"
+          },
+          "version": {
+            "type": "string",
+            "description": "Package version"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["cargo", "npm", "pip", "system", "other"],
+            "description": "Package ecosystem/type"
+          },
+          "license": {
+            "type": "string",
+            "description": "SPDX license identifier"
+          },
+          "purl": {
+            "type": "string",
+            "description": "Package URL (purl) identifier"
+          },
+          "cpe": {
+            "type": "string",
+            "description": "Common Platform Enumeration identifier"
+          },
+          "direct": {
+            "type": "boolean",
+            "description": "Whether this is a direct dependency (vs transitive)"
+          }
+        }
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "description": "Dependency relationships between packages",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "description": "Source package name"
+          },
+          "to": {
+            "type": "string",
+            "description": "Target package name"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["depends-on", "dev-depends-on", "optional-depends-on"],
+            "description": "Type of relationship"
+          }
+        }
+      }
+    }
+  }
+}
+

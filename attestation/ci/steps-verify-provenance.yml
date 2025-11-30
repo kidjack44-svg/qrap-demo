@@ -1,0 +1,38 @@
+# Reusable CI steps for verifying provenance attestations
+# Usage: Include these steps in your workflow job
+
+# Example usage in a workflow:
+# jobs:
+#   verify:
+#     steps:
+#       - uses: actions/checkout@v4
+#       - name: Verify provenance
+#         run: |
+#           source attestation/ci/steps-verify-provenance.yml
+#           # Or use the individual steps below
+
+# Step 1: Install dependencies (jq for JSON parsing)
+- name: Install verification dependencies
+  run: |
+    if ! command -v jq &> /dev/null; then
+      sudo apt-get update && sudo apt-get install -y jq
+    fi
+
+# Step 2: Ensure script is executable
+- name: Prepare verification script
+  run: chmod +x attestation/scripts/verify-provenance.sh
+
+# Step 3: Download provenance artifact (if from another job)
+- name: Download provenance attestation
+  uses: actions/download-artifact@v4
+  with:
+    name: provenance-attestation
+    path: attestation/output/
+  continue-on-error: true
+
+# Step 4: Verify provenance attestation
+- name: Verify provenance attestation
+  run: bash attestation/scripts/verify-provenance.sh "${PROVENANCE_INPUT:-attestation/output/provenance.json}"
+  env:
+    EXPECTED_REPO: "https://github.com/${{ github.repository }}"
+
